@@ -21,40 +21,36 @@
 namespace LogoGen{
     void GenerateLogoFile(int argc, char* argv[])
     {
-    //TODO: 
-        try{
-            if(std::strcmp(argv[1], "txt") != 0 && std::strcmp(argv[1], "sh") != 0){
-                throw(std::runtime_error("incorrect file type: Please type txt or sh"));
-            }
-            
-        }
-        catch(const std::runtime_error& er){
-            std::cerr << er.what() << std::endl;
-            std::exit(-1);
+        if(std::strcmp(argv[1], "txt") != 0 && std::strcmp(argv[1], "sh") != 0){
+           std::cerr << "incorrect file type: Please type txt or sh";
+           std::exit(2);
         }
 
         std::cout << "creating file" << std::endl;
         std::ostringstream fileName;
         fileName << argv[0] << "." << argv[1];
-        try {
-            std::ofstream file(fileName.str());
+        //files dont throw exceptions, instead they use flag bits and we check ourself whether raised or not
+        //if you really care check the flags
+        std::ofstream file(fileName.str());
+        if(file.is_open())
+        {
             if (!std::strcmp(argv[1], "txt"))
             {
                 file << "Hello World";
             }
             else if (!std::strcmp(argv[1], "sh"))
-            {  
+            {
                 file << "#! /bin/bash\n\n";
                 file << "echo \"Hello World\"";
             }
             file.close();
+            
         }
-        //files dont throw exceptions, instead they use flag bits and we check ourself whether raised or not
-        catch (...)
-        {
-            std::exit(-1);
+        else {
+            std::cerr << "File could not be opened";
+            std::exit(2);
         }
-        return;
+        
     }
 }
 
@@ -62,17 +58,10 @@ namespace LogoGen{
 int main(int argc, char* argv[])
 {
 //TODO: remove try block. check with an if statement and return 2/-1 otherwise.
-    try{
-        if(argc != 3)
-        {
-            std::ostringstream errMsg;
-            errMsg << "Program requires 2 arguments provided " << argc;
-            throw(std::runtime_error(errMsg.str()));
-        }
-    }
-    catch(const std::runtime_error& er){
-        std::cerr << er.what() << std::endl;
-        return -1;
+    if(argc != 3)
+    {
+        std::cerr << "Program requires 2 arguments provided " << argc;
+        return 2;
     }
     //Call file generator with program argument stripped
     LogoGen::GenerateLogoFile(--argc, ++argv);
