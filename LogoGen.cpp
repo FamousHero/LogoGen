@@ -23,7 +23,7 @@ namespace LogoGen{
     {
         if(std::strcmp(argv[1], "txt") != 0 && std::strcmp(argv[1], "sh") != 0){
            std::cerr << "incorrect file type: Please type txt or sh";
-           std::exit(2);
+           std::exit(-1);
         }
 
         std::cout << "creating file" << std::endl;
@@ -48,7 +48,7 @@ namespace LogoGen{
         }
         else {
             std::cerr << "File could not be opened";
-            std::exit(2);
+            std::exit(-1);
         }
         
     }
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
     if(argc != 3)
     {
         std::cerr << "Program requires 2 arguments provided " << argc;
-        return 2;
+        return -1;
     }
     //Call file generator with program argument stripped
     LogoGen::GenerateLogoFile(--argc, ++argv);
