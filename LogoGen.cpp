@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <cstring>
+#include <limits>
 /*Takes two arguments:
 * The logo to be generated
 * whether the file should be a sh or txt
@@ -32,8 +33,45 @@ namespace LogoGen{
         //files dont throw exceptions, instead they use flag bits and we check ourself whether raised or not
         //if you really care check the flags
         std::ofstream file(fileName.str());
-        if(file.is_open())
+        //Letters begin at row 6, and are separated every 7 lines
+        //to get to the start of any letter just take 6 + 7 *(letter index)
+        std::ifstream formatFile("Letter Format.txt");
+
+        if(file.is_open() && formatFile.is_open())
         {
+            std::string row1 = "";
+            std::string row2;
+            std::string row3;
+            std::string row4;
+            std::string row5;
+            std::string row6;
+            char* charp = argv[0];
+            //Iterate through each character, and write its first line to the string
+            while (*charp)
+            {
+                //std::cout << " string is currently: " << row1 <<std::endl;
+                std::cout << *charp << ": ";
+                int letterIndex = std::tolower(*charp) - 'a';
+                int filePosition = 5 + 7 * letterIndex;
+                while (filePosition != 0)
+                {
+                    formatFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                    --filePosition;
+                }
+                std::string temp;
+                std::getline(formatFile, temp, '\r');
+                std::cout << temp << std::endl;
+                row1 = row1 + temp + " ";
+                //std::cout << row1 << std::endl;
+
+                formatFile.seekg(0, formatFile.beg);
+                ++charp;
+            }
+            std::cout << row1 << std::endl;
+            
+
+
+
             if (!std::strcmp(argv[1], "txt"))
             {
                 file << "Hello World";
