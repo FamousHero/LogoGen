@@ -39,35 +39,33 @@ namespace LogoGen{
 
         if(file.is_open() && formatFile.is_open())
         {
-            std::string row1 = "";
-            std::string row2;
-            std::string row3;
-            std::string row4;
-            std::string row5;
-            std::string row6;
+            std::string text = "";
             char* charp = argv[0];
             //Iterate through each character, and write its first line to the string
-            while (*charp)
+            for(int i = 0; i < 6; ++i)
             {
-                //std::cout << " string is currently: " << row1 <<std::endl;
-                std::cout << *charp << ": ";
-                int letterIndex = std::tolower(*charp) - 'a';
-                int filePosition = 5 + 7 * letterIndex;
-                while (filePosition != 0)
+                char* tcp = charp;
+                while (*tcp)
                 {
-                    formatFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    --filePosition;
-                }
-                std::string temp;
-                std::getline(formatFile, temp, '\r');
-                std::cout << temp << std::endl;
-                row1 = row1 + temp + " ";
-                //std::cout << row1 << std::endl;
 
-                formatFile.seekg(0, formatFile.beg);
-                ++charp;
+                    //std::cout << " string is currently: " << row1 <<std::endl;
+                    int letterIndex = std::tolower(*tcp) - 'a';
+                    int filePosition = 5 + 7 * letterIndex + i;
+                    while (filePosition != 0)
+                    {
+                        formatFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        --filePosition;
+                    }
+                    std::string temp;
+                    std::getline(formatFile, temp, '\r');
+                    text = text + temp + " ";
+
+                    formatFile.seekg(0, formatFile.beg);
+                    ++tcp;
+                }
+                text += "\n";   
             }
-            std::cout << row1 << std::endl;
+            std::cout << "final text is: \n" << text << std::endl;
             
 
 

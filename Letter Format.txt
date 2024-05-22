@@ -50,7 +50,6 @@ Format for each letter. Want them to have the same height and line width
 ##      
 ##  ####
 ##    ##
-##    ##
   ####  
 
 ##    ##
@@ -164,7 +163,6 @@ Format for each letter. Want them to have the same height and line width
 ## ## ##
 ###  ###
 ##    ##
-
 
 ##    ##
  ##  ## 
