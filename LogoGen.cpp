@@ -41,27 +41,40 @@ namespace LogoGen{
         {
             std::string text = "";
             char* charp = argv[0];
-            //Iterate through each character, and write its first line to the string
             for(int i = 0; i < 6; ++i)
             {
+                if(!std::strcmp(argv[1], "sh")){
+                    text += "echo \"";
+                }
                 char* tcp = charp;
                 while (*tcp)
                 {
-
-                    //std::cout << " string is currently: " << row1 <<std::endl;
+                    //Iterate through each character, and write its corresponding text to temp base on current row i    
                     int letterIndex = std::tolower(*tcp) - 'a';
-                    int filePosition = 5 + 7 * letterIndex + i;
-                    while (filePosition != 0)
-                    {
-                        formatFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                        --filePosition;
-                    }
                     std::string temp;
-                    std::getline(formatFile, temp, '\r');
+                    if(letterIndex == 32 - 97){ //Only Non-Alpha character allowed is ' ' (Can add # in future)
+
+                        temp += "    ";
+                    }
+                    else if(letterIndex < 0 ||letterIndex > 26){
+                        ++tcp;
+                        continue;
+                    }
+                    else{
+                        int filePosition = 5 + 7 * letterIndex + i;
+                        while (filePosition != 0){
+                            formatFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                            --filePosition;
+                        }
+                        std::getline(formatFile, temp, '\r');
+                    }
                     text = text + temp + " ";
 
                     formatFile.seekg(0, formatFile.beg);
                     ++tcp;
+                }
+                if(!std::strcmp(argv[1], "sh")){
+                    text += "\"";
                 }
                 text += "\n";   
             }
@@ -72,12 +85,12 @@ namespace LogoGen{
 
             if (!std::strcmp(argv[1], "txt"))
             {
-                file << "Hello World";
+                file << text;
             }
             else if (!std::strcmp(argv[1], "sh"))
             {
                 file << "#! /bin/bash\n\n";
-                file << "echo \"Hello World\"";
+                file << text; //"echo \"Hello World\"";
             }
             file.close();
             
